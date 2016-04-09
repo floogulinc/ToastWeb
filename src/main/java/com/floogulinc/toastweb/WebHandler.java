@@ -51,12 +51,14 @@ public class WebHandler {
             hm.put("include_body", new Handlebars.SafeString(hb.compileInline(opt.fn.text()).apply(hm)));
             return new Handlebars.SafeString(applyTemplate(template, hm));
         });
+        
+        int selectedPort = pref.getInt("port", 5802);
 
-        port(5802);
+        port(selectedPort);
 
         webSocket("/socket/logger", SocketLogger.class);
         
-        String selectedModuleName = pref.getString("config.modulename", "ToastWeb");
+        String selectedModuleName = pref.getString("modulename", "ToastWeb");
         
         for(ModuleConfig c : ModuleConfig.allConfigs) {
             if(c.parent_file.getName().equalsIgnoreCase(selectedModuleName + ".conf")) {

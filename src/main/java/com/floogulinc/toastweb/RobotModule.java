@@ -15,7 +15,7 @@ public class RobotModule extends IterativeModule {
 
     @Override
     public String getModuleVersion() {
-        return "0.1.0";
+        return "0.1.1";
     }
     
     @Override

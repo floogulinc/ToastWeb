@@ -28,7 +28,7 @@ If you haven't already, you can deploy [Toast](https://github.com/Open-RIO/Toast
 ## Screenshots
 
 ### Main Screen
-![ToastWeb main screen screenshot](https://i.imgur.com/Cat1XJf.png)
+![ToastWeb main screen screenshot](https://i.imgur.com/kZ4F1aa.png)
 
 ### Configuration Screen
-![ToastWeb configuration screen screenshot](https://i.imgur.com/kZ4F1aa.png)
+![ToastWeb configuration screen screenshot](https://i.imgur.com/SiBnMae.png)

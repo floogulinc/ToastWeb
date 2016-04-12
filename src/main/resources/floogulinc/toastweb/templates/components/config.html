@@ -1,7 +1,25 @@
-<script type="text/javascript" src="/scripts/config.js"> </script>
+<script type="text/javascript" src="/scripts/config.js">
+</script>
 <div>
-    <label> Configuration </label>
-    <textarea id="config_area" style="height: 500px;" onkeyup="if (event.keyCode == 13 && event.ctrlKey) updateConfig();">
-    </textarea>
-    <a class="button" onclick="updateConfig();" style="width: 100%;"> Save Config </a>
+    <h4> Configuration </h4>
+    <div class="container">
+        <div class="row">
+            <div class="column">
+                <textarea id="config_area" class="config_area monospace_text" onkeyup="if (event.keyCode == 13 && event.ctrlKey) updateConfig();">
+                </textarea>
+                <a class="button" onclick="updateConfig();" style="width: 100%;"> Save Config </a>
+            </div>
+            <div class="column column-20">
+                <table id="configList">
+                    <thead>
+                        <tr>
+                            <th> Config Files </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

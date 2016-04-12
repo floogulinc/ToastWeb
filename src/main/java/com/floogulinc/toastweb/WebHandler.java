@@ -24,7 +24,6 @@ import java.util.Map;
 public class WebHandler {
 
     public static ModuleConfig pref;
-    public static ModuleConfig selectedConfig;
     static Handlebars hb;
     static HashMap<String, Template> templates;
 
@@ -58,13 +57,6 @@ public class WebHandler {
 
         webSocket("/socket/logger", SocketLogger.class);
         
-        String selectedModuleName = pref.getString("modulename", "ToastWeb");
-        
-        for(ModuleConfig c : ModuleConfig.allConfigs) {
-            if(c.parent_file.getName().equalsIgnoreCase(selectedModuleName + ".conf")) {
-                selectedConfig = c;
-            }
-        }
         
         webSocket("/socket/config", SocketConfig.class);
         Logger.addHandler(new SocketLogger());

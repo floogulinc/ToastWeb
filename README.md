@@ -1,16 +1,15 @@
 # ToastWeb [![Build Status](https://travis-ci.org/floogulinc/ToastWeb.svg?branch=master)](https://travis-ci.org/floogulinc/ToastWeb)
 Web UI for [Toast](https://github.com/Open-RIO/ToastAPI)
 
-![ToastWeb main screen screenshot](https://i.imgur.com/XxdjyMg.png)
+![ToastWeb main screen screenshot](https://i.imgur.com/3AChBff.png)
 
 ## How to use
-Set `modulename` in `toast/config/toastweb.conf` to the name of the `moduleconfig` you want to edit in the web UI. The UI will load the Toast `moduleconfig` with the file name of the name set in the config + `.conf`. Set `port` in the config to the port you want the web UI to be served on.
+Set `port` in the config to the port you want the web UI to be served on.
 
 Example config:
 ```js
 {
 	"port":5802,
-	"modulename":"ToastWeb"
 }
 
 ```
@@ -32,4 +31,4 @@ If you haven't already, you can deploy [Toast](https://github.com/Open-RIO/Toast
 ![ToastWeb main screen screenshot](https://i.imgur.com/Cat1XJf.png)
 
 ### Configuration Screen
-![ToastWeb configuration screen screenshot](https://i.imgur.com/LDE3KXa.png)
+![ToastWeb configuration screen screenshot](https://i.imgur.com/kZ4F1aa.png)

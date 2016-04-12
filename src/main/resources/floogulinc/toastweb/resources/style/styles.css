@@ -41,10 +41,21 @@ body {
     color: #606c76 !important;
 }
 
+.monospace_text {
+    font-size: 12px;
+    font-family: monospace;
+    -moz-tab-size : 4;
+    -o-tab-size : 4;
+    tab-size : 4;
+}
+
 .loggerField {
     resize: none;
     height: 30rem;
-    font-size: 12px;
+}
+
+.config_area {
+    height: 500px;
 }
 
 td {

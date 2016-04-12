@@ -1,24 +1,29 @@
 package com.floogulinc.toastweb.websockets;
 
+import com.floogulinc.toastweb.WebHandler;
+import com.grack.nanojson.JsonArray;
+import com.grack.nanojson.JsonObject;
+import com.grack.nanojson.JsonParser;
+import com.grack.nanojson.JsonParserException;
+
+import jaci.openrio.toast.core.ToastConfiguration;
+import jaci.openrio.toast.lib.module.ModuleConfig;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import com.floogulinc.toastweb.WebHandler;
-
-import jaci.openrio.toast.lib.module.ModuleConfig;
-
 import javax.script.ScriptException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @WebSocket
 public class SocketConfig {
-        
+
     private static final Queue<Session> sessions = new ConcurrentLinkedQueue<>();
 
     @OnWebSocketConnect
@@ -33,19 +38,57 @@ public class SocketConfig {
 
     @OnWebSocketMessage
     public void message(Session session, String message) throws IOException {
-        if (message.equalsIgnoreCase("initial")) {
+        if (message.equalsIgnoreCase("list")) {
             try {
-                session.getRemote().sendString(WebHandler.selectedConfig.toJSON());
-            } catch (IOException | ScriptException e) {}
+                JsonObject masterObj = new JsonObject();
+                JsonArray json = new JsonArray();
+                ModuleConfig.allConfigs.forEach(config -> {
+                    JsonObject obj = new JsonObject();
+                    obj.put("name", config.parent_file.getName());
+                    obj.put("code", Integer.toUnsignedString(config.hashCode(), 16));
+                    json.add(obj);
+                });
+                masterObj.put("action", "list");
+                masterObj.put("data", json);
+                session.getRemote().sendString(WebHandler.jsonToString(masterObj));
+            } catch (IOException e) { }
         } else {
-            FileWriter writer = new FileWriter(WebHandler.selectedConfig.parent_file);
-            writer.write(message);
-            writer.close();
-            WebHandler.selectedConfig.reload();
-
             try {
-                session.getRemote().sendString(WebHandler.selectedConfig.toJSON());
-            } catch (IOException | ScriptException e) {}
+                JsonObject obj = JsonParser.object().from(message);
+                String action = obj.getString("action");
+                String hashcode = obj.getString("code");
+
+                Optional<ModuleConfig> optConfig = ModuleConfig.allConfigs.stream().filter(config2 -> {
+                    try {
+                        return hashcode != null && config2.hashCode() == Integer.parseUnsignedInt(hashcode, 16);
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                }).findFirst();
+
+                ModuleConfig config = ToastConfiguration.config;
+                if (optConfig.isPresent()) config = optConfig.get();
+
+                JsonObject jsonSend = new JsonObject();
+                jsonSend.put("action", "update");
+
+                if (action.equalsIgnoreCase("initial")) {
+                    try {
+                        jsonSend.put("data", config.toJSON());
+                        session.getRemote().sendString(WebHandler.jsonToString(jsonSend));
+                    } catch (IOException | ScriptException e) {}
+                } else if (action.equalsIgnoreCase("set")) {
+                    FileWriter writer = new FileWriter(config.parent_file);
+                    writer.write(obj.getString("data"));
+                    writer.close();
+                    config.reload();
+
+                    try {
+                        jsonSend.put("data", config.toJSON());
+                        session.getRemote().sendString(WebHandler.jsonToString(jsonSend));
+                    } catch (IOException | ScriptException e) {}
+                }
+            } catch (JsonParserException e) { }
         }
     }
 }
